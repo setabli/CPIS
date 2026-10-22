@@ -1,0 +1,45 @@
+{
+  "full_image": {
+    "question": "Describe this image in one short sentence.",
+    "max_new_tokens": 48
+  },
+  "object": [
+    {
+      "field": "subject",
+      "question": "What is the main object in this image? Ignore the black padding. Answer with a short noun phrase.",
+      "max_new_tokens": 24
+    },
+    {
+      "field": "appearance",
+      "question": "What does the main object look like? Describe its visible appearance in one short sentence. Ignore the black padding.",
+      "max_new_tokens": 48
+    },
+    {
+      "field": "count",
+      "question": "How many main objects are visible in this image? Ignore the black padding. Answer with a single number, or unknown if uncertain.",
+      "max_new_tokens": 12
+    },
+    {
+      "field": "action",
+      "question": "What is the main object doing? Answer with a short phrase. If no action is visible, answer unknown.",
+      "max_new_tokens": 24
+    }
+  ],
+  "context": [
+    {
+      "field": "scene",
+      "question": "Describe the visible scene in one short sentence. Ignore the black area.",
+      "max_new_tokens": 48
+    },
+    {
+      "field": "ground",
+      "question": "What does the visible ground look like? Answer briefly. Ignore the black area. If no ground is visible, answer unknown.",
+      "max_new_tokens": 32
+    },
+    {
+      "field": "surroundings",
+      "question": "What is visible around the black area? Describe only what is visible, in one short sentence. Do not guess what is hidden.",
+      "max_new_tokens": 48
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "prompt": "a car is driving on an icefield with an aurora in the sky",
+    "variants": [
+      "a car is driving on an icefield, with an aurora in the sky",
+      "on an icefield, a car is driving with an aurora in the sky",
+      "am aurora is in the sky while a car is driving on an icefield"
+    ],
+    "semantics": {
+      "subject": "a car",
+      "action": " is driving",
+      "location": " an icefield",
+      "relation": "on",
+      "environment": [
+        {
+          "subject": "an aurora",
+          "action": "",
+          "location": "the sky",
+          "relation": "in"
+        }
+      ]
+    }
+  }
+]
