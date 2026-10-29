@@ -7,23 +7,27 @@ Controllable Partial Image Steganography.
 | Path | Purpose |
 | --- | --- |
 | `demo.py` | Image hiding and recovery with correct keys |
+| `verify_lre.py` | Standalone verification of latent representation encryption |
 | `sd2/` | Stable Diffusion model files |
-| `unet/` | Correction network, training script, and checkpoints |
-| `seg/` | GroundingDINO and SAM region selection |
-| `inblip/` | InstructBLIP model, description script, and query templates |
-| `qwen/` | Qwen model, semantic aggregation script, and instruction template |
-| `t5/` | T5 semantic-parser training code and data |
+| `seg/` | Rule-guided region selection using Qwen2.5-VL and SAM |
+| `qwen/` | Visual-description and semantic-aggregation scripts, prompt templates, and local Qwen model files |
+| `t5/` | T5 semantic-parser training code, data, and checkpoints |
 
-Place pretrained model files in their corresponding directories as shown above in "Project Structure". Set the T5 model source in `t5/config.py` and GPU settings in the relevant configuration files.
+Place pretrained model files in their corresponding directories and configure their paths in the relevant scripts. Visual description and region localization require Qwen2.5-VL, while semantic aggregation uses the text-only Qwen model. Set the T5 model source and training options in `t5/config.py`.
 
 ## Experimentation
 
-`demo.py` provides the core steps of image hiding and recovery. To run your own experiment, modify the arguments in the parser (for example, `image_path`, `mask_path`, `private_key`, `public_key`, `unet_checkpoint`, `len_key`, `shuffle_step`, and `inject_step`) and replace the model loading in `demo.py` with your own trained model/checkpoint.
+`demo.py` provides the core image hiding and recovery process using mask-guided diffusion, key-controlled latent transformations, and iterative numerical inversion.
 
-In the demo mask, white pixels are editable and black pixels are preserved. `shuffle_step` and `inject_step` control channel shuffling and LEN injection during public denoising.
+Before running the script, modify the parser defaults for `model_path`, `image_path`, `mask_path`, `private_prompt`, `public_prompt`, and GPU settings. Configure the independent LEP and LEN keys through `perm_key` and `len_key`, or use the local key file specified by `key_file`. Explicit keys must each contain 32 hexadecimal characters, representing 128 bits.
+
+White mask pixels are editable and black pixels are preserved. `perm_step` controls position-wise channel permutation, and `len_step` controls noise-perturbation injection during public-branch denoising. Both are counted from the start of the descending denoising sequence. Use matching keys and diffusion settings for hiding and recovery.
 
 ## Other Scripts
 
-Each module can be verified in its corresponding directory, where example data are provided for reference. After configuring their inputs, run `seg/run_tgrs.py`, `inblip/inblip_demo.py`, or `qwen/qwen_demo.py` separately. Qwen reads `inblip_output/result.json` by default. These modules are not automatically invoked by `demo.py`.
+The modules can be run separately after configuring their model paths and inputs:
 
-For training, configure and run `t5/train.py` or `unet/train.py`. The provided UNet training script uses synthetic correction targets; actual image recovery requires pair-specific weights trained with real diffusion correction targets and matching settings.
+- `seg/`: locate a region using the shared selection policy and generate masks with SAM.
+- `qwen/`: extract masked-region and contextual visual descriptions with Qwen2.5-VL, then aggregate them with Qwen. Set the aggregation input to the visual-description script's output `result.json`.
+- `t5/train.py`: train the T5 semantic parser using the configuration in `t5/config.py`.
+- `verify_lre.py`: run standalone LRE verification.

@@ -1,0 +1,37 @@
+{
+  "version": "pimm_qwen25vl_descriptions_v1",
+  "system_prompt": "You extract factual visual evidence for a two-stream image-understanding pipeline. Use English. Describe only visible content in the supplied image. Artificial black padding represents content excluded from the current view; it is not a real object, surface, or lighting condition. Do not infer what is hidden by that padding. Genuine dark visible objects remain valid visual evidence. Do not use prior knowledge to invent details. Follow the requested output format exactly. These are visual evidence fields for later semantic aggregation, not a final canonical diffusion prompt.",
+  "object": {
+    "question": "This is the local masked-region view. Only pixels belonging to this view have been retained; excluded pixels are black. The visible region can contain objects, background, or both, so do not assume it is one foreground object. Extract the main visible entities or coherent regions, their appearance, visible actions or states, locations, spatial relations, and environmental elements. Preserve relationships between visible entities when supported. Do not describe the hidden complementary region. A location may only refer to a visible supporting surface or visible spatial reference. A relation is the connecting preposition or short relation, such as on, in, beside, or above, only when directly supported. Put additional visible environmental elements and their relations in the environment string. Use description for a concise factual sentence summarizing this view. Return one valid JSON object with exactly the specified fields. All values must be strings except count, which must be a non-negative integer or null. Count only the main discrete visible entities when their number is clear; use null for uncountable regions or uncertainty. Use an empty string for any unsupported string field. Do not output Markdown, field types, explanations, or text outside the JSON object.",
+    "max_new_tokens": 384,
+    "fields": {
+      "subject": "string",
+      "appearance": "string",
+      "count": "integer_or_null",
+      "action": "string",
+      "location": "string",
+      "relation": "string",
+      "environment": "string",
+      "description": "string"
+    }
+  },
+  "context": {
+    "question": "This is the complementary context view. Only pixels outside the local target region have been retained; excluded pixels are black. Describe the visible context without guessing the content of the excluded region. The retained context may include foreground objects, scenery, or both; do not assume that it is only background. Extract a brief visible scene description, the visible ground or supporting surface, and visible surroundings. Also record the main visible subject or coherent region, any directly visible action or state, its visible location, the relation connecting the subject to that location, and additional visible environmental elements. Use description for a concise factual sentence summarizing this view. Do not label artificial black padding as an object or real scene surface. Return one valid JSON object with exactly the specified fields. Every value must be a string. Use an empty string when a field is unsupported or not visible. Do not output Markdown, field types, explanations, or text outside the JSON object.",
+    "max_new_tokens": 384,
+    "fields": {
+      "scene": "string",
+      "ground": "string",
+      "surroundings": "string",
+      "subject": "string",
+      "action": "string",
+      "location": "string",
+      "relation": "string",
+      "environment": "string",
+      "description": "string"
+    }
+  },
+  "full_image": {
+    "question": "Describe the visible image in one concise factual English sentence. Mention its main entities, actions, and scene only when supported. Do not invent details, write JSON, or add an explanation.",
+    "max_new_tokens": 64
+  }
+}
